@@ -1,0 +1,22 @@
+{
+  "name": "@wp-chunk-init/lgpack-cli",
+  "version": "1.0.0",
+  "description": "CLI tool for lgpack bundler",
+  "main": "src/index.js",
+  "bin": {
+    "lgpack": "./bin/cli.js"
+  },
+  "scripts": {},
+  "keywords": [
+    "lgpack",
+    "cli",
+    "bundler"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@wp-chunk-init/lgpack": "workspace:*",
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0"
+  }
+}
