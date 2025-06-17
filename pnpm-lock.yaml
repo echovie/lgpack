@@ -39,10 +39,8 @@ importers:
 
   packages/playground:
     specifiers:
-      '@wp-chunk-init/lgpack': workspace:*
       '@wp-chunk-init/lgpack-cli': workspace:*
     dependencies:
-      '@wp-chunk-init/lgpack': link:../lgpack
       '@wp-chunk-init/lgpack-cli': link:../lgpack-cli
 
 packages:
