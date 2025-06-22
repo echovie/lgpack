@@ -33,8 +33,6 @@ class Compiler extends Tapable {
       afterCompile: new AsyncSeriesHook(["compilation"]),
 
       emit: new AsyncSeriesHook(["compilation"]),
-
-      done: new AsyncSeriesHook(["compilation"]),
     };
   }
 
@@ -53,7 +51,7 @@ class Compiler extends Tapable {
         this.outputFileSystem.writeFileSync(targetPath, source, "utf8");
       }
 
-      // 文件写入完成后，触发 afterEmit 钩子
+      // 文件写入完成后，触发 done 钩子
       this.hooks.done.callAsync(compilation, (err) => {
         callback(err);
       });
@@ -91,7 +89,7 @@ class Compiler extends Tapable {
   compile(callback) {
     const params = this.newCompilationParams();
 
-    this.hooks.beforeRun.callAsync(params, (err) => {
+    this.hooks.beforeCompile.callAsync(params, (err) => {
       this.hooks.compile.call(params);
       const compilation = this.newCompilation(params);
 
