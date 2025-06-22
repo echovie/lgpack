@@ -1,5 +1,5 @@
 {
-  "name": "@wp-chunk-init/lgpack",
+  "name": "@lgpack/lgpack",
   "version": "1.0.0",
   "description": "Lightweight lgpack implementation",
   "main": "./lib/lgpack.js",

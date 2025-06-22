@@ -1,12 +1,10 @@
 {
-  "name": "@wp-chunk-init/playground",
+  "name": "@lgpack/playground",
   "version": "1.0.0",
   "description": "Playground for testing lgpack plugin and lgpack",
   "private": true,
   "scripts": {
-    "clean": "rm -rf dist",
-    "build": "npm run clean && lgpack --config lgpack.config.js",
-    "start": "node dist/main.js"
+    "dev": "lgpack dev"
   },
   "keywords": [
     "playground",
@@ -15,6 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@wp-chunk-init/lgpack-cli": "workspace:*"
+    "@lgpack/lgpack-cli": "workspace:*",
+    "@lgpack/html-lgpack-plugin": "workspace:*",
+    "@lgpack/lgpack-dev-server": "workspace:*"
   }
 }

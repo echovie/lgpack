@@ -1,0 +1,9 @@
+{
+  "name": "@lgpack/html-lgpack-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "main": "./index.js",
+  "author": "",
+  "license": "ISC"
+}

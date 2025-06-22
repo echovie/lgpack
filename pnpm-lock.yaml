@@ -5,6 +5,9 @@ importers:
   .:
     specifiers: {}
 
+  packages/html-lgpack-plugin:
+    specifiers: {}
+
   packages/lgpack:
     specifiers:
       '@babel/core': ^7.12.10
@@ -29,19 +32,26 @@ importers:
 
   packages/lgpack-cli:
     specifiers:
-      '@wp-chunk-init/lgpack': workspace:*
+      '@lgpack/lgpack': workspace:*
       chalk: ^4.1.2
       commander: ^11.1.0
     dependencies:
-      '@wp-chunk-init/lgpack': link:../lgpack
+      '@lgpack/lgpack': link:../lgpack
       chalk: 4.1.2
       commander: 11.1.0
 
+  packages/lgpack-dev-server:
+    specifiers: {}
+
   packages/playground:
     specifiers:
-      '@wp-chunk-init/lgpack-cli': workspace:*
+      '@lgpack/html-lgpack-plugin': workspace:*
+      '@lgpack/lgpack-cli': workspace:*
+      '@lgpack/lgpack-dev-server': workspace:*
     dependencies:
-      '@wp-chunk-init/lgpack-cli': link:../lgpack-cli
+      '@lgpack/html-lgpack-plugin': link:../html-lgpack-plugin
+      '@lgpack/lgpack-cli': link:../lgpack-cli
+      '@lgpack/lgpack-dev-server': link:../lgpack-dev-server
 
 packages:
 

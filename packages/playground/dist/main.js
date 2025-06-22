@@ -108,9 +108,9 @@ return __webpack_require__(__webpack_require__.s = './src/index.js')
   
     "./src/index.js":
       (function (module, exports, __webpack_require__) {
-      console.log("Hello from playground!");
-let title = __webpack_require__("./src/title.js");
-console.log(title);
+      let title = __webpack_require__("./src/title.js");
+console.log("Hello from playground!");
+console.log("title", title);
 console.log("执行了");
         }),
         
