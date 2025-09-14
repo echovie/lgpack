@@ -6,11 +6,11 @@ const traverse = require("@babel/traverse").default;
 class NormalModule {
   constructor(data) {
     this.context = data.context;
-    this.name = data.name;
-    this.moduleId = data.moduleId;
-    this.rawRequest = data.rawRequest;
-    this.parser = data.parser; // TODO: 等待完成
-    this.resource = data.resource;
+    this.name = data.name; // 模块名称e
+    this.moduleId = data.moduleId; // 模块id
+    this.rawRequest = data.rawRequest; // 模块的请求路径
+    this.parser = data.parser; // 模块的解析器
+    this.resource = data.resource; // 模块的资源路径
     this._source; // 存放某个模块的源代码
     this._ast; // 存放某个模板源代码对应的 ast
     this.dependencies = []; // 定义一个空数组用于保存被依赖加载的模块信息
@@ -25,14 +25,15 @@ class NormalModule {
      * 05 前面的完成之后，我们只需要重复执行即可
      */
     this.doBuild(compilation, (err) => {
+      // 1. 将module的源码转为 ast 语法树
       this._ast = this.parser.parse(this._source);
 
-      // 这里的 _ast 就是当前 module 的语法树，我们可以对它进行修改，最后再将 ast 转回成 code 代码
+      // 2. 对module的ast语法树进行修改，最后再将 ast 转回成 code 代码
       traverse(this._ast, {
         CallExpression: (nodePath) => {
           let node = nodePath.node;
 
-          // 定位 require 所在的节点
+          // 3. 定位 require 所在的节点
           if (node.callee.name === "require") {
             // 获取原始请求路径
             let modulePath = node.arguments[0].value; // './title'
@@ -41,32 +42,33 @@ class NormalModule {
             // [当前我们的打包器只处理 js ]
             let extName = moduleName.indexOf(".") == -1 ? ".js" : "";
             moduleName += extName; // title.js
-            // 【最终我们想要读取当前js里的内容】 所以我们需要个绝对路径
+            //  绝对路径, /Users/txboy/Desktop/project/lgpack/packages/playground/src/title.js
             let depResource = path.posix.join(
               path.posix.dirname(this.resource),
               moduleName
             );
-            // 【将当前模块的 id 定义OK】
+            // 相对路径， ./src/title.js
             let depModuleId =
-              "./" + path.posix.relative(this.context, depResource); // ./src/title.js
+              "./" + path.posix.relative(this.context, depResource);
 
-            // 记录当前被依赖模块的信息，方便后面递归加载
+            // 3. 记录当前被依赖模块的信息，方便后面递归加载
             this.dependencies.push({
-              name: this.name, // TODO: 将来需要修改
+              name: this.name,
               context: process.cwd(),
               rawRequest: moduleName,
               moduleId: depModuleId,
               resource: depResource,
             });
 
-            // 替换内容
+            // 4. 替换 require 为 __webpack_require__
             node.callee.name = "__webpack_require__";
+            // 5. 替换 require 的路径替换为被依赖模块的真实相对路径
             node.arguments = [types.stringLiteral(depModuleId)];
           }
         },
       });
 
-      // 上述的操作是利用ast 按要求做了代码修改，下面的内容就是利用 .... 将修改后的 ast 转回成 code
+      // 6. 将修改后的 ast 转回成 code
       let { code } = generator(this._ast);
       this._source = code;
       callback(err);

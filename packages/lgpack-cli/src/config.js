@@ -14,31 +14,31 @@ const defaultConfig = {
 
 function loadConfig(configPath) {
   try {
-    // 如果指定了配置文件路径
+    // 1. 如果指定了配置文件路径
     if (configPath) {
       const resolvedPath = path.resolve(process.cwd(), configPath);
 
-      // 检查文件是否存在
-      if (!fs.existsSync(resolvedPath)) {
-        console.warn(`Config file not found: ${resolvedPath}`);
-        return defaultConfig;
+      // 1.1 检查文件是否存在，如果文件不存在，返回默认的配置
+      if (fs.existsSync(resolvedPath)) {
+        return require(resolvedPath);
       }
 
-      // 文件存在，尝试加载
-      const config = require(resolvedPath);
-      return config;
+      // 1.2 文件存在，尝试加载并返回
+      return defaultConfig;
     }
 
-    // 如果没有指定配置文件，尝试查找默认配置文件
+    // 2. 如果没有指定配置文件，尝试查找默认配置文件
     const defaultConfigFiles = ["lgpack.config.js"];
 
     for (const file of defaultConfigFiles) {
       const filePath = path.resolve(process.cwd(), file);
+      // 2.1 文件存在，尝试加载并返回
       if (fs.existsSync(filePath)) {
         return require(filePath);
       }
     }
 
+    // 2.2 如果文件不存在，返回默认的配置
     return defaultConfig;
   } catch (error) {
     console.warn("Failed to load config file, using default config");

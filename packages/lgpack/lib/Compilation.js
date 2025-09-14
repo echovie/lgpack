@@ -19,11 +19,12 @@ class Compilation extends Tapable {
     // 让 compilation 具备文件的读写能力
     this.inputFileSystem = compiler.inputFileSystem;
     this.outputFileSystem = compiler.outputFileSystem;
+
     this.entries = []; // 存入所有入口模块的数组
     this.modules = []; // 存放所有模块的数据
     this.chunks = []; // 存放当前次打包过程中所产出的 chunk
-    this.assets = [];
-    this.files = [];
+    this.assets = []; // 存放所有资源
+    this.files = []; // 存放所有文件
     this.hooks = {
       succeedModule: new SyncHook(["module"]),
       seal: new SyncHook(),
@@ -63,13 +64,8 @@ class Compilation extends Tapable {
     );
   }
 
-  /**
-   * 定义一个创建模块的方法，达到复用的目的
-   * @param {*} data 创建模块时所需要的一些属性值
-   * @param {*} doAddEntry 可选参数，在加载入口模块的时候，将入口模块的id 写入 this.entries
-   * @param {*} callback
-   */
   createModule(data, doAddEntry, callback) {
+    // 1. 编译模块
     let module = normalModuleFactory.create(data);
 
     const afterBuild = (err, module) => {
@@ -84,9 +80,10 @@ class Compilation extends Tapable {
       }
     };
 
+    // 2. 构建模块依赖树
     this.buildModule(module, afterBuild);
 
-    // 当我们完成了本次的 build 操作之后将 module 进行保存
+    // 3. 当我们完成了本次的 build 操作之后将 module 进行保存
     doAddEntry && doAddEntry(module);
     this.modules.push(module);
   }
@@ -122,7 +119,7 @@ class Compilation extends Tapable {
             moduleId: dependency.moduleId,
             resource: dependency.resource,
           },
-          null,
+          null, // 是否需要添加到入口
           done
         );
       },

@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 
+// 1. 实例化一个可执行命令对象 —— lgpack（单例模式）
 const { program } = require("commander");
 const bundle = require("../src/index.js");
 
-program.version("1.0.0").description("A lightweight lgpack-like bundler CLI");
+// 2. 配置主命令信息
+program.version("1.0.0").description("A lightweight bundler CLI");
 
-// dev 命令
+// 3. 配置子命令（dev 命令）
 program
   .command("dev")
   .description("Build the project for production")
@@ -14,6 +16,7 @@ program
   .option("-o, --output <path>", "output directory path")
   .action(async (options) => {
     try {
+      // 5. 调用 bundle 函数，执行打包逻辑
       await bundle({
         configPath: options.config,
         entry: options.entry,
@@ -26,4 +29,5 @@ program
     }
   });
 
+// 4. 解析命令行参数
 program.parse(process.argv);

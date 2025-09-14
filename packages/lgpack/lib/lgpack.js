@@ -7,10 +7,10 @@ const lgpack = function (options) {
   let compiler = new Compiler(options.context);
   compiler.options = options;
 
-  // 02 初始化 NodeEnvironmentPlugin(让compiler具体文件读写能力)
+  // 02 挂载 NodeEnvironmentPlugin插件 (让compiler具体文件读写能力)
   new NodeEnvironmentPlugin().apply(compiler);
 
-  // 03 挂载所有 plugins 插件至 compiler 对象身上
+  // 03 挂载用户自定义的 plugins 插件
   if (options.plugins && Array.isArray(options.plugins)) {
     for (const plugin of options.plugins) {
       plugin.apply(compiler);

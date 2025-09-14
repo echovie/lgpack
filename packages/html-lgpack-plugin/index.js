@@ -35,33 +35,31 @@ class HtmlLgpackPlugin {
   }
 
   apply(compiler) {
-    console.log("compiler---");
-
     compiler.hooks.emit.tapAsync(
       "HtmlLgpackPlugin",
       (compilation, callback) => {
-        // 获取所有 JS 文件
+        // 1. 获取模板内容
+        let html = this.getTemplateContent();
+
+        // 2. 替换标题
+        html = html.replace(/\{\{title\}\}/g, this.options.title);
+
+        // 3. 获取所有 JS 文件
         const jsFiles = Object.keys(compilation.assets).filter((asset) =>
           asset.endsWith(".js")
         );
 
-        // 生成 script 标签
+        // 4. 生成 script 标签
         const scripts = jsFiles
           .map((file) => `<script src="${file}"></script>`)
           .join("\n    ");
 
-        // 获取模板内容
-        let html = this.getTemplateContent();
-
-        // 替换标题
-        html = html.replace(/\{\{title\}\}/g, this.options.title);
-
-        // 注入 script 标签
+        // 5. 注入 script 标签
         if (scripts) {
-          html = html.replace("</body>", `    ${scripts}\n</body>`);
+          html = html.replace("</body>", `\n${scripts}\n</body>`);
         }
 
-        // 添加到输出
+        // 6. 添加到输出，html 文件
         compilation.assets[this.options.filename] = html;
 
         callback();
